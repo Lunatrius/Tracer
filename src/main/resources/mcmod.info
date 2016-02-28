@@ -4,7 +4,7 @@
 		{
 			"modid": "Tracer",
 			"name": "Tracer",
-			"description": "",
+			"description": "A simple entity path debugger.",
 			"mcversion": "${mcversion}",
 			"version": "${version}",
 			"authorList": [
