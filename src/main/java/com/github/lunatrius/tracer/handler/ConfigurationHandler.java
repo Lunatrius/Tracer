@@ -106,7 +106,7 @@ public class ConfigurationHandler {
         configuration.setCategoryPropertyOrder(category, order);
     }
 
-    public static void unregisterEntityName(final String name) {
+    public static void unregisterTraceRenderInformation(final String name) {
         final ConfigCategory category = configuration.getCategory(Names.Config.Category.REGISTRY);
         for (final ConfigCategory categoryRenderInfo : category.getChildren()) {
             if (name.equalsIgnoreCase(categoryRenderInfo.getName())) {

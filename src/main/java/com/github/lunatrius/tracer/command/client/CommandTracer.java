@@ -11,6 +11,7 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentTranslation;
 
+import java.util.Collections;
 import java.util.List;
 
 public class CommandTracer extends CommandBase {
@@ -35,13 +36,18 @@ public class CommandTracer extends CommandBase {
             return getListOfStringsMatchingLastWord(args, Names.Command.REGISTER, Names.Command.UNREGISTER, Names.Command.CLEAR);
         } else if (args.length == 2) {
             if (args[0].equalsIgnoreCase(Names.Command.REGISTER)) {
-                return getListOfStringsMatchingLastWord(args, EntityList.getEntityNameList());
+                return getSortedListOfStringsMatchingLastWord(args, EntityList.getEntityNameList());
             } else if (args[0].equalsIgnoreCase(Names.Command.UNREGISTER)) {
-                return getListOfStringsMatchingLastWord(args, ConfigurationHandler.getRegisteredEntityNames());
+                return getSortedListOfStringsMatchingLastWord(args, ConfigurationHandler.getRegisteredEntityNames());
             }
         }
 
         return null;
+    }
+
+    private List<String> getSortedListOfStringsMatchingLastWord(final String[] args, final List<String> possibilities) {
+        Collections.sort(possibilities);
+        return getListOfStringsMatchingLastWord(args, possibilities);
     }
 
     @Override
@@ -62,7 +68,7 @@ public class CommandTracer extends CommandBase {
         } else if (args[0].equalsIgnoreCase(Names.Command.UNREGISTER)) {
             if (args.length == 2) {
                 final String entityName = args[1];
-                ConfigurationHandler.unregisterEntityName(entityName);
+                ConfigurationHandler.unregisterTraceRenderInformation(entityName);
                 ConfigurationHandler.loadConfiguration();
                 sender.addChatMessage(new ChatComponentTranslation(Names.Command.Message.UNREGISTER, entityName));
             } else {
