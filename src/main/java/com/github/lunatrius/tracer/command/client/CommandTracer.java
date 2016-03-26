@@ -8,8 +8,9 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.EntityList;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentTranslation;
 
 import java.util.Collections;
 import java.util.List;
@@ -26,12 +27,12 @@ public class CommandTracer extends CommandBase {
     }
 
     @Override
-    public boolean canCommandSenderUseCommand(final ICommandSender sender) {
+    public boolean checkPermission(final MinecraftServer server, final ICommandSender sender) {
         return true;
     }
 
     @Override
-    public List<String> addTabCompletionOptions(final ICommandSender sender, final String[] args, final BlockPos pos) {
+    public List<String> getTabCompletionOptions(final MinecraftServer server, final ICommandSender sender, final String[] args, final BlockPos pos) {
         if (args.length == 1) {
             return getListOfStringsMatchingLastWord(args, Names.Command.REGISTER, Names.Command.UNREGISTER, Names.Command.CLEAR);
         } else if (args.length == 2) {
@@ -51,7 +52,7 @@ public class CommandTracer extends CommandBase {
     }
 
     @Override
-    public void processCommand(final ICommandSender sender, final String[] args) throws CommandException {
+    public void execute(final MinecraftServer server, final ICommandSender sender, final String[] args) throws CommandException {
         if (args.length == 0) {
             throw new WrongUsageException(getCommandUsage(sender));
         }
@@ -61,7 +62,7 @@ public class CommandTracer extends CommandBase {
                 final String entityName = args[1];
                 ConfigurationHandler.registerTraceRenderInformation(entityName);
                 ConfigurationHandler.loadConfiguration();
-                sender.addChatMessage(new ChatComponentTranslation(Names.Command.Message.REGISTER, entityName));
+                sender.addChatMessage(new TextComponentTranslation(Names.Command.Message.REGISTER, entityName));
             } else {
                 throw new WrongUsageException(Names.Command.Message.REGISTER_USAGE);
             }
@@ -70,13 +71,13 @@ public class CommandTracer extends CommandBase {
                 final String entityName = args[1];
                 ConfigurationHandler.unregisterTraceRenderInformation(entityName);
                 ConfigurationHandler.loadConfiguration();
-                sender.addChatMessage(new ChatComponentTranslation(Names.Command.Message.UNREGISTER, entityName));
+                sender.addChatMessage(new TextComponentTranslation(Names.Command.Message.UNREGISTER, entityName));
             } else {
                 throw new WrongUsageException(Names.Command.Message.UNREGISTER_USAGE);
             }
         } else if (args[0].equalsIgnoreCase(Names.Command.CLEAR)) {
             final int count = TraceHandler.INSTANCE.clearTraces();
-            sender.addChatMessage(new ChatComponentTranslation(Names.Command.Message.CLEAR, count));
+            sender.addChatMessage(new TextComponentTranslation(Names.Command.Message.CLEAR, count));
         }
     }
 }

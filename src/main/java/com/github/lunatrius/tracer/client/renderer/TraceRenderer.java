@@ -9,7 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -36,9 +36,9 @@ public class TraceRenderer {
             return;
         }
 
-        this.playerPosition.x = (float) (player.lastTickPosX + (player.posX - player.lastTickPosX) * event.partialTicks);
-        this.playerPosition.y = (float) (player.lastTickPosY + (player.posY - player.lastTickPosY) * event.partialTicks);
-        this.playerPosition.z = (float) (player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * event.partialTicks);
+        this.playerPosition.x = (float) (player.lastTickPosX + (player.posX - player.lastTickPosX) * event.getPartialTicks());
+        this.playerPosition.y = (float) (player.lastTickPosY + (player.posY - player.lastTickPosY) * event.getPartialTicks());
+        this.playerPosition.z = (float) (player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * event.getPartialTicks());
 
         this.minecraft.mcProfiler.startSection("tracer");
         render(traces);
@@ -55,7 +55,7 @@ public class TraceRenderer {
         GlStateManager.translate(-this.playerPosition.x, -this.playerPosition.y, -this.playerPosition.z);
 
         final Tessellator tessellator = Tessellator.getInstance();
-        final WorldRenderer worldRenderer = tessellator.getWorldRenderer();
+        final VertexBuffer buffer = tessellator.getBuffer();
 
         for (final Trace trace : traces) {
             final TraceRenderInformation renderInfo = trace.getRenderInformation();
@@ -69,10 +69,10 @@ public class TraceRenderer {
             GL11.glEnable(GL11.GL_LINE_SMOOTH);
             GL11.glLineWidth(thickness);
 
-            worldRenderer.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION_COLOR);
+            buffer.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION_COLOR);
 
             for (final TickingVec3 pos : trace.getPositions()) {
-                worldRenderer.pos(pos.xCoord, pos.yCoord + offsetY, pos.zCoord).color(r, g, b, a).endVertex();
+                buffer.pos(pos.xCoord, pos.yCoord + offsetY, pos.zCoord).color(r, g, b, a).endVertex();
             }
 
             tessellator.draw();

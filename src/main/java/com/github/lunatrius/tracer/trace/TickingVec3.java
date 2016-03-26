@@ -1,11 +1,11 @@
 package com.github.lunatrius.tracer.trace;
 
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 
-public class TickingVec3 extends Vec3 {
+public class TickingVec3 extends Vec3d {
     private int ttl;
 
-    public TickingVec3(final Vec3 vec, final int ttl) {
+    public TickingVec3(final Vec3d vec, final int ttl) {
         this(vec.xCoord, vec.yCoord, vec.zCoord, ttl);
     }
 

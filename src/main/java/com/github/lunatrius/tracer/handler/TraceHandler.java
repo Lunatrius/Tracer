@@ -33,23 +33,23 @@ public class TraceHandler {
             return;
         }
 
-        if (player.worldObj == event.world) {
+        if (player.worldObj == event.getWorld()) {
             clearTraces();
         }
     }
 
     @SubscribeEvent
     public void onEntityJoinWorld(final EntityJoinWorldEvent event) {
-        if (!event.world.isRemote) {
+        if (!event.getWorld().isRemote) {
             return;
         }
 
-        final TraceRenderInformation renderInfo = TraceRegistry.INSTANCE.get(event.entity);
+        final TraceRenderInformation renderInfo = TraceRegistry.INSTANCE.get(event.getEntity());
         if (renderInfo == null) {
             return;
         }
 
-        this.traces.add(new Trace(event.entity, renderInfo));
+        this.traces.add(new Trace(event.getEntity(), renderInfo));
     }
 
     @SubscribeEvent
