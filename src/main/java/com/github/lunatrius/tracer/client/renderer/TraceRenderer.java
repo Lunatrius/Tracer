@@ -31,7 +31,7 @@ public class TraceRenderer {
             return;
         }
 
-        final EntityPlayerSP player = this.minecraft.thePlayer;
+        final EntityPlayerSP player = this.minecraft.player;
         if (player == null) {
             return;
         }

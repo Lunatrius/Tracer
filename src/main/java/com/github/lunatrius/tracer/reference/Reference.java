@@ -3,11 +3,8 @@ package com.github.lunatrius.tracer.reference;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.Locale;
-
 public class Reference {
-    public static final String MODID = "Tracer";
-    public static final String MODID_LOWER = MODID.toLowerCase(Locale.ENGLISH);
+    public static final String MODID = "tracer";
     public static final String NAME = "Tracer";
     public static final String VERSION = "${version}";
     public static final String FORGE = "${forgeversion}";

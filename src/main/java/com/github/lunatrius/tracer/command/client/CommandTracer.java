@@ -9,20 +9,22 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.EntityList;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class CommandTracer extends CommandBase {
     @Override
-    public String getCommandName() {
+    public String getName() {
         return Names.Command.NAME;
     }
 
     @Override
-    public String getCommandUsage(final ICommandSender sender) {
+    public String getUsage(final ICommandSender sender) {
         return Names.Command.Message.USAGE;
     }
 
@@ -32,12 +34,16 @@ public class CommandTracer extends CommandBase {
     }
 
     @Override
-    public List<String> getTabCompletionOptions(final MinecraftServer server, final ICommandSender sender, final String[] args, final BlockPos pos) {
+    public List<String> getTabCompletions(final MinecraftServer server, final ICommandSender sender, final String[] args, final BlockPos pos) {
         if (args.length == 1) {
             return getListOfStringsMatchingLastWord(args, Names.Command.REGISTER, Names.Command.UNREGISTER, Names.Command.CLEAR);
         } else if (args.length == 2) {
             if (args[0].equalsIgnoreCase(Names.Command.REGISTER)) {
-                return getSortedListOfStringsMatchingLastWord(args, EntityList.getEntityNameList());
+                final ArrayList<String> possibilities = new ArrayList<String>();
+                for (ResourceLocation location : EntityList.getEntityNameList()) {
+                    possibilities.add(location.toString());
+                }
+                return getSortedListOfStringsMatchingLastWord(args, possibilities);
             } else if (args[0].equalsIgnoreCase(Names.Command.UNREGISTER)) {
                 return getSortedListOfStringsMatchingLastWord(args, ConfigurationHandler.getRegisteredEntityNames());
             }
@@ -54,7 +60,7 @@ public class CommandTracer extends CommandBase {
     @Override
     public void execute(final MinecraftServer server, final ICommandSender sender, final String[] args) throws CommandException {
         if (args.length == 0) {
-            throw new WrongUsageException(getCommandUsage(sender));
+            throw new WrongUsageException(getUsage(sender));
         }
 
         if (args[0].equalsIgnoreCase(Names.Command.REGISTER)) {
@@ -62,7 +68,7 @@ public class CommandTracer extends CommandBase {
                 final String entityName = args[1];
                 ConfigurationHandler.registerTraceRenderInformation(entityName);
                 ConfigurationHandler.loadConfiguration();
-                sender.addChatMessage(new TextComponentTranslation(Names.Command.Message.REGISTER, entityName));
+                sender.sendMessage(new TextComponentTranslation(Names.Command.Message.REGISTER, entityName));
             } else {
                 throw new WrongUsageException(Names.Command.Message.REGISTER_USAGE);
             }
@@ -71,13 +77,13 @@ public class CommandTracer extends CommandBase {
                 final String entityName = args[1];
                 ConfigurationHandler.unregisterTraceRenderInformation(entityName);
                 ConfigurationHandler.loadConfiguration();
-                sender.addChatMessage(new TextComponentTranslation(Names.Command.Message.UNREGISTER, entityName));
+                sender.sendMessage(new TextComponentTranslation(Names.Command.Message.UNREGISTER, entityName));
             } else {
                 throw new WrongUsageException(Names.Command.Message.UNREGISTER_USAGE);
             }
         } else if (args[0].equalsIgnoreCase(Names.Command.CLEAR)) {
             final int count = TraceHandler.INSTANCE.clearTraces();
-            sender.addChatMessage(new TextComponentTranslation(Names.Command.Message.CLEAR, count));
+            sender.sendMessage(new TextComponentTranslation(Names.Command.Message.CLEAR, count));
         }
     }
 }

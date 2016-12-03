@@ -3,6 +3,7 @@ package com.github.lunatrius.tracer.trace.registry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,7 +31,12 @@ public class TraceRegistry {
             return null;
         }
 
-        final String entityName = EntityList.getEntityString(entity);
+        final ResourceLocation key = EntityList.getKey(entity);
+        if (key == null) {
+            return null;
+        }
+
+        final String entityName = key.toString();
         return this.map.get(entityName);
     }
 }

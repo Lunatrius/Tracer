@@ -26,7 +26,7 @@ public class Names {
         public static final String OFFSET_Y = "offsetY";
         public static final String OFFSET_Y_DESC = ""; // intentionally left blank
 
-        public static final String LANG_PREFIX = Reference.MODID_LOWER + ".config";
+        public static final String LANG_PREFIX = Reference.MODID + ".config";
     }
 
     public static final class Command {

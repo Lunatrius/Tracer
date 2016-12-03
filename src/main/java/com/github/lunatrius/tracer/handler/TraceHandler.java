@@ -28,12 +28,12 @@ public class TraceHandler {
 
     @SubscribeEvent
     public void onWorldUnload(final WorldEvent.Unload event) {
-        final EntityPlayerSP player = this.minecraft.thePlayer;
+        final EntityPlayerSP player = this.minecraft.player;
         if (player == null) {
             return;
         }
 
-        if (player.worldObj == event.getWorld()) {
+        if (player.world == event.getWorld()) {
             clearTraces();
         }
     }
@@ -58,7 +58,7 @@ public class TraceHandler {
             return;
         }
 
-        if (this.minecraft.thePlayer == null || this.minecraft.theWorld == null) {
+        if (this.minecraft.player == null || this.minecraft.world == null) {
             clearTraces();
             return;
         }
