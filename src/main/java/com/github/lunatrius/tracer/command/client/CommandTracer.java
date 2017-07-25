@@ -3,6 +3,7 @@ package com.github.lunatrius.tracer.command.client;
 import com.github.lunatrius.tracer.handler.ConfigurationHandler;
 import com.github.lunatrius.tracer.handler.TraceHandler;
 import com.github.lunatrius.tracer.reference.Names;
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -13,10 +14,14 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class CommandTracer extends CommandBase {
     @Override
     public String getName() {
@@ -34,7 +39,7 @@ public class CommandTracer extends CommandBase {
     }
 
     @Override
-    public List<String> getTabCompletions(final MinecraftServer server, final ICommandSender sender, final String[] args, final BlockPos pos) {
+    public List<String> getTabCompletions(final MinecraftServer server, final ICommandSender sender, final String[] args, final @Nullable BlockPos pos) {
         if (args.length == 1) {
             return getListOfStringsMatchingLastWord(args, Names.Command.REGISTER, Names.Command.UNREGISTER, Names.Command.CLEAR);
         } else if (args.length == 2) {
@@ -49,7 +54,7 @@ public class CommandTracer extends CommandBase {
             }
         }
 
-        return null;
+        return Collections.emptyList();
     }
 
     private List<String> getSortedListOfStringsMatchingLastWord(final String[] args, final List<String> possibilities) {
